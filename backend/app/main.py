@@ -11,7 +11,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.api import router as api_router
-from app.services.scheduler import scheduler
 
 logger = logging.getLogger(__name__)
 
@@ -24,13 +23,8 @@ async def lifespan(app: FastAPI):
                 settings.app_name, settings.app_version,
                 settings.api_prefix, settings.debug)
     
-    # Start the continuous simulation loop
-    await scheduler.start()
-    
     yield
     
-    # Graceful shutdown
-    await scheduler.stop()
     logger.info("%s shutting down", settings.app_name)
 
 
