@@ -27,7 +27,7 @@ INSERT INTO marketplace_modules (
     'agrienergy',
     'agrienergy',
     'AgriEnergy Orchestrator',
-    'AgriEnergy Orchestrator — Description of your module',
+    'Agrivoltaic orchestration: PV simulation, shadow geometry, JSON Logic algorithms, NGSI-LD closed-loop, optional Intelligence and N8N.',
     '/modules/agrienergy/nkz-module.js',
     '1.0.0',
     'k8-benetis',

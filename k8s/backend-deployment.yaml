@@ -28,8 +28,7 @@ spec:
         component: backend
         module: agrienergy
     spec:
-      imagePullSecrets:
-        - name: ghcr-secret
+      # No imagePullSecrets: public GHCR images pull anonymously (CLAUDE.md)
       containers:
         - name: backend
           image: ghcr.io/k8-benetis/agrienergy-backend:v1.0.0
@@ -54,6 +53,9 @@ spec:
               value: "nekazari"
             - name: JWT_AUDIENCE
               value: "account"
+            # Orion-LD URL for creating entities (e.g. AgriSolarPark). Required for POST /parks.
+            - name: CONTEXT_BROKER_URL
+              value: "http://orion-ld-service:1026/ngsi-ld/v1"  # Override if Orion is behind another host
             # Service-to-service auth (optional)
             - name: MODULE_MANAGEMENT_KEY
               valueFrom:

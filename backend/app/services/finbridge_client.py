@@ -13,10 +13,10 @@ class FinBridgeEmitter:
     """
 
     def __init__(self):
-        # En la plataforma NKZ esto suele apuntar al bus de eventos interno
-        # o a un webhook de N8N que orquesta el conector de Odoo.
         self.settings = get_settings()
-        self.webhook_url = "http://n8n-webhook-service:5678/webhook/agrienergy-aggregation"
+        self.webhook_url = (
+            getattr(self.settings, "agrienergy_n8n_webhook_url", None) or ""
+        ).strip() or "http://n8n-webhook-service:5678/webhook/agrienergy-aggregation"
 
     async def emit_daily_aggregation(self, tenant_id: str, tracker_id: str, generation_wh: float, consumption_wh: float = 0.0):
         """

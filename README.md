@@ -1,29 +1,48 @@
-# Nekazari Module Template
+# AgriEnergy Orchestrator — Nekazari Module
 
-Starter template for building **external modules** for the Nekazari platform.
+Agrivoltaic module: PV simulation (pvlib), 2.5D shadow geometry (Shapely), JSON Logic algorithms, NGSI-LD closed-loop (notify → algorithm → targetTilt), and optional biological handshake (NKZ-Intelligence) and FinBridge (N8N) aggregation.
 
-Modules compile to a single IIFE bundle (`dist/nkz-module.js`) that is uploaded to MinIO and loaded at runtime by the host via `<script>` injection. No build-time coupling to the host.
+Built from the Nekazari module template: single IIFE bundle uploaded to MinIO, loaded at runtime by the host.
+
+---
+
+## Backend API Endpoints
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/health` | — | K8s liveness/readiness probe |
+| POST | `/api/agrienergy/simulate` | — | One-shot PV + shadow simulation (tracker, parcel, telemetry, target_tilt) → expected_power_w, shadow_area_m2, shadow_polygon_2d |
+| POST | `/api/agrienergy/notify` | tenant | NGSI-LD subscription webhook (WeatherObserved / AgriEnergyTracker) — runs algorithm, updates targetTilt/tilt/modelRotation, optional MQTT command |
+| GET | `/api/agrienergy/status?tracker_id=...` | tenant | Instant values for panel/Cesium: orientation, power, sensors, timestamp |
+| GET | `/api/agrienergy/algorithms` | tenant | List built-in algorithm presets (id, name, logic) for selector |
+| GET | `/api/agrienergy/signal-sources` | tenant | List entities and numeric attributes for signal mapping (query: `entity_types`) |
+| PATCH | `/api/agrienergy/trackers/{id}/signal-mapping` | tenant | Save signal mapping (body: `{ "signalMapping": [ { "contextKey", "entityId", "attribute" } ] }`) |
+| PATCH | `/api/agrienergy/trackers/{id}/algorithm` | tenant | Set active algorithm (body: `{ "activeAlgorithm": { "id": "default:maximize" } }` or full JSON Logic) |
+| GET | `/api/agrienergy/parcels` | tenant | List parcels (AgriParcel) for create-park dropdown |
+| GET | `/api/agrienergy/parks` | tenant | List solar parks (AgriSolarPark); includes tracker_count per park |
+| GET | `/api/agrienergy/parks/{park_id}/trackers` | tenant | List trackers in that park (same refAgriParcel) |
+| POST | `/api/agrienergy/parks` | tenant | Create AgriSolarPark (body: `{ "name", "ref_agri_parcel" }`). Requires `CONTEXT_BROKER_URL`. |
+| GET | `/api/agrienergy/admin/stats` | TenantAdmin / PlatformAdmin | Module stats (placeholder counts; extend later) |
+| GET | `/api/agrienergy/docs` | — | OpenAPI Swagger UI |
+| GET | `/api/agrienergy/openapi.json` | — | OpenAPI schema |
+
+**Documentation**: [docs/REFERENCE.md](docs/REFERENCE.md) — algorithms (catalogue + how to add), simulation, Intelligence contract, Odoo/N8N. [docs/SIMULATE_PERIOD_SPEC.md](docs/SIMULATE_PERIOD_SPEC.md) — full contract for POST /simulate-period.
+
+**Signal configuration**: Map sensors (NGSI-LD entities) per tracker via "Configure signals" UI: GET `/status`, GET `/signal-sources`, PATCH signal-mapping. See REFERENCE.md.
+
+Ensure ingress routes `/api/agrienergy` to `agrienergy-api-service:8000` before the generic `/api` catch-all.
 
 ---
 
 ## Quick start
 
 ```bash
-git clone https://github.com/k8-benetis/nkz-module-template.git my-module
-cd my-module
+git clone https://github.com/k8-benetis/nkz-module-agrienergy.git
+cd nkz-module-agrienergy
 npm install
 ```
 
-Do a **find-and-replace** across the repo for these placeholders:
-
-| Placeholder | Example value | Where |
-|-------------|---------------|-------|
-| `agrienergy` | `soil-sensor` | package.json, vite.config.ts, k8s/, SQL |
-| `AgriEnergy Orchestrator` | `Soil Sensor` | App.tsx, k8s/, SQL, manifest.json |
-| `/agrienergy` | `/soil-sensor` | manifest.json, SQL |
-| `k8-benetis` | `acme-corp` | k8s/backend-deployment.yaml, SQL |
-
-Then update `manifest.json` with your module's metadata.
+Configure environment (see SETUP.md for optional placeholders if you fork this repo to create another module).
 
 ---
 

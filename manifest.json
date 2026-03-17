@@ -32,7 +32,7 @@
   "slots": {
     "map-layer": [],
     "layer-toggle": [],
-    "context-panel": ["ExampleSlot"],
+    "context-panel": ["AgriEnergySandbox"],
     "bottom-panel": [],
     "entity-tree": [],
     "dashboard-widget": []

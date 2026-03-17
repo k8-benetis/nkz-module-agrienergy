@@ -28,7 +28,13 @@ class Settings(BaseSettings):
     
     # Service-to-service authentication
     module_management_key: str = ""
-    
+
+    # Context Broker (Orion-LD) for creating entities (e.g. AgriSolarPark). If empty, create_entity is no-op.
+    context_broker_url: str = ""  # e.g. http://orion-ld:1026/ngsi-ld/v1
+
+    # N8N webhook for daily aggregation (Odoo/FinBridge). If empty, FinBridgeEmitter uses in-cluster default.
+    agrienergy_n8n_webhook_url: str = ""  # e.g. https://n8n.example.com/webhook/agrienergy-aggregation
+
     # Database (optional - uncomment if using)
     # database_url: str = ""
     

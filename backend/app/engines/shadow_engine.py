@@ -35,6 +35,7 @@ class ShadowEngine:
                                  panel_azimuth: float, 
                                  solar_elevation: float, 
                                  solar_azimuth: float,
+                                 clearance_height: float = 2.0,
                                  terrain_slope: float = 0.0,
                                  terrain_aspect: float = 180.0) -> dict:
         """
@@ -68,17 +69,21 @@ class ShadowEngine:
         vertices_rotated = (R_az @ (R_tilt @ vertices.T)).T
         
         # Añadir altura base al poste geométrico para proyección
-        vertices_rotated[:, 2] += 2.0 # Poste de 2m de altura
+        vertices_rotated[:, 2] += clearance_height
 
-        # 3. Vector solar
+        # 3. Vector solar (RAYO DE LUZ DESDE EL SOL AL SUELO)
+        # Apuntamos hacia ABAJO (negativo Z)
         el_rad = np.radians(solar_elevation)
-        az_rad = np.radians(180 - solar_azimuth) # Invertir para vector incidente
+        az_rad = np.radians(180 - solar_azimuth) 
         
-        sz = np.sin(el_rad)
-        sy = np.cos(el_rad) * np.cos(az_rad)
-        sx = np.cos(el_rad) * np.sin(az_rad)
+        # Vector apuntando hacia el sol:
+        # sz = sin(el), sy = cos(el)*cos(az), sx = cos(el)*sin(az)
+        # Invertimos para obtener el rayo que Cae:
+        sz_ray = -np.sin(el_rad)
+        sy_ray = -np.cos(el_rad) * np.cos(az_rad)
+        sx_ray = -np.cos(el_rad) * np.sin(az_rad)
         
-        sun_vector = np.array([sx, sy, sz])
+        ray_vector = np.array([sx_ray, sy_ray, sz_ray])
         
         # 4. Proyección sobre terreno 2.5D
         # Si el terreno tiene pendiente, el vector normal Z no es (0,0,1)
@@ -94,13 +99,13 @@ class ShadowEngine:
         # Proyección de cada vértice al plano del terreno por el vector solar
         projected = []
         for v in vertices_rotated:
-            # t = (N·P - N·V) / (N·S) donde P=(0,0,0) (origen del plano topográfico local)
-            dot_ns = np.dot(terrain_normal, sun_vector)
-            if dot_ns >= 0:
-                continue # El panel está debajo del terreno (imposible) o el sol no incide sobre el terreno
+            # t = (N·P - N·V) / (N·R) donde P=(0,0,0) origen topográfico, R es el Ray Vector
+            dot_nr = np.dot(terrain_normal, ray_vector)
+            if dot_nr >= 0:
+                continue # El rayo sale del suelo o no lo cruza
                 
-            t = -np.dot(terrain_normal, v) / dot_ns
-            p_proj = v + t * sun_vector
+            t = -np.dot(terrain_normal, v) / dot_nr
+            p_proj = v + t * ray_vector
             projected.append(p_proj[:2]) # 2D en el plano topográfico
 
         if len(projected) < 3:
