@@ -4,7 +4,11 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardContent, CardTitle, Button } from '@nekazari/ui-kit';
-import { useApi, useTranslation } from '@nekazari/sdk';
+import { useTranslation } from '@nekazari/sdk';
+
+function fetchWithAuth(path: string, init?: RequestInit): Promise<Response> {
+    return fetch(path, { credentials: 'include', ...init, headers: { 'Content-Type': 'application/json', ...init?.headers } });
+}
 
 const DEFAULT_CONTEXT_KEYS = ['weather.ghi', 'weather.dni', 'weather.dhi', 'weather.temperature'];
 
@@ -37,7 +41,6 @@ export const ConfigureSignals: React.FC<ConfigureSignalsProps> = ({
     currentMapping,
     onSaved,
 }) => {
-    const { fetchWithAuth } = useApi();
     const { t } = useTranslation();
     const [sources, setSources] = useState<SignalSource[]>([]);
     const [loadingSources, setLoadingSources] = useState(false);
@@ -64,7 +67,7 @@ export const ConfigureSignals: React.FC<ConfigureSignalsProps> = ({
         } finally {
             setLoadingSources(false);
         }
-    }, [fetchWithAuth]);
+    }, []);
 
     useEffect(() => {
         fetchSources();

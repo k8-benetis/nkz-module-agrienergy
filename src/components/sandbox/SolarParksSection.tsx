@@ -3,7 +3,7 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardContent, CardTitle, Button } from '@nekazari/ui-kit';
-import { useApi, useTranslation, useViewer } from '@nekazari/sdk';
+import { useTranslation, useViewerOptional } from '@nekazari/sdk';
 
 interface ParkSummary {
     park_id: string;
@@ -24,10 +24,13 @@ interface ParcelItem {
     name: string;
 }
 
+function fetchWithAuth(path: string, init?: RequestInit): Promise<Response> {
+    return fetch(path, { credentials: 'include', ...init, headers: { 'Content-Type': 'application/json', ...init?.headers } });
+}
+
 export const SolarParksSection: React.FC = () => {
-    const { fetchWithAuth } = useApi();
     const { t } = useTranslation();
-    const viewer = useViewer?.();
+    const viewer = useViewerOptional();
     const [parks, setParks] = useState<ParkSummary[]>([]);
     const [parcels, setParcels] = useState<ParcelItem[]>([]);
     const [selectedParkId, setSelectedParkId] = useState<string | null>(null);
@@ -79,8 +82,8 @@ export const SolarParksSection: React.FC = () => {
         }
         setLoadingTrackers(true);
         fetchWithAuth(`/api/agrienergy/parks/${encodeURIComponent(selectedParkId)}/trackers`)
-            .then((res) => (res.ok ? res.json() : { trackers: [] }))
-            .then((data) => setTrackers(data.trackers || []))
+            .then((res: Response) => (res.ok ? res.json() : { trackers: [] }))
+            .then((data: { trackers?: ParkTrackerItem[] }) => setTrackers(data.trackers || []))
             .catch(() => setTrackers([]))
             .finally(() => setLoadingTrackers(false));
     }, [selectedParkId, fetchWithAuth]);
@@ -120,7 +123,7 @@ export const SolarParksSection: React.FC = () => {
                 <CardTitle className="text-sm">{t('agrienergy.parks.title')}</CardTitle>
                 <Button
                     size="sm"
-                    variant="outline"
+                    variant="secondary"
                     onClick={() => { setShowCreateForm(!showCreateForm); setCreateError(null); }}
                 >
                     {showCreateForm ? t('agrienergy.parks.cancel') : t('agrienergy.parks.createPark')}

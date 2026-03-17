@@ -4,7 +4,11 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '@nekazari/ui-kit';
-import { useApi, useTranslation } from '@nekazari/sdk';
+import { useTranslation } from '@nekazari/sdk';
+
+function fetchWithAuth(path: string, init?: RequestInit): Promise<Response> {
+    return fetch(path, { credentials: 'include', ...init, headers: { 'Content-Type': 'application/json', ...init?.headers } });
+}
 
 interface AlgorithmPreset {
     id: string;
@@ -17,7 +21,6 @@ export const AlgorithmSelector: React.FC<{
     currentAlgorithmId?: string | null;
     onSaved?: () => void;
 }> = ({ trackerId, currentAlgorithmId, onSaved }) => {
-    const { fetchWithAuth } = useApi();
     const { t } = useTranslation();
     const [algorithms, setAlgorithms] = useState<AlgorithmPreset[]>([]);
     const [selectedId, setSelectedId] = useState<string>(currentAlgorithmId ?? '');
@@ -38,7 +41,7 @@ export const AlgorithmSelector: React.FC<{
         } catch {
             setAlgorithms([]);
         }
-    }, [fetchWithAuth]);
+    }, []);
 
     useEffect(() => {
         fetchAlgorithms();

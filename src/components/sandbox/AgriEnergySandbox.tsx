@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardContent, CardTitle, Button, Alert } from '@nekazari/ui-kit';
-import { useApi, useTranslation, useViewer } from '@nekazari/sdk';
+import { useTranslation, useViewerOptional } from '@nekazari/sdk';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ConfigureSignals } from './ConfigureSignals';
 import { SolarParksSection } from './SolarParksSection';
 
 const STATUS_POLL_INTERVAL_MS = 10000;
+
+function fetchWithAuth(path: string, init?: RequestInit): Promise<Response> {
+    return fetch(path, { credentials: 'include', ...init, headers: { 'Content-Type': 'application/json', ...init?.headers } });
+}
 
 interface SignalMappingRow {
     contextKey: string;
@@ -25,9 +29,9 @@ interface TrackerStatus {
 }
 
 export const AgriEnergySandbox: React.FC = () => {
-    const { fetchWithAuth } = useApi();
     const { t } = useTranslation();
-    const { selectedEntityId } = useViewer?.() ?? { selectedEntityId: null };
+    const viewer = useViewerOptional();
+    const selectedEntityId = viewer?.selectedEntityId ?? null;
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
     const [targetTilt, setTargetTilt] = useState<number>(30);
@@ -56,7 +60,7 @@ export const AgriEnergySandbox: React.FC = () => {
             setStatus(null);
             setStatusError(t('agrienergy.panel.noData'));
         }
-    }, [selectedEntityId, fetchWithAuth, t]);
+    }, [selectedEntityId, t]);
 
     useEffect(() => {
         fetchStatus();

@@ -2,15 +2,13 @@
  * Global type declarations for the Nekazari host runtime.
  * These globals are injected by the host before module bundles execute.
  */
-import type { ModuleViewerSlots } from '@nekazari/sdk';
-
 declare global {
   interface Window {
     /** Host module registry — call .register() from moduleEntry.ts */
     __NKZ__: {
       register(module: {
         id: string;
-        viewerSlots: ModuleViewerSlots;
+        viewerSlots: Record<string, unknown[]>;
         version?: string;
         main?: import('react').ComponentType;
       }): void;
