@@ -2,7 +2,7 @@
  * Solar parks (AgriSolarPark): selector, list of trackers per park, create park form.
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardContent, CardTitle, Button } from '@nekazari/ui-kit';
+import { Card, Button } from '@nekazari/ui-kit';
 import { useTranslation, useViewerOptional } from '@nekazari/sdk';
 
 interface ParkSummary {
@@ -119,8 +119,8 @@ export const SolarParksSection: React.FC = () => {
 
     return (
         <Card className="bg-white dark:bg-gray-800 shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-sm">{t('agrienergy.parks.title')}</CardTitle>
+            <div className="px-4 pt-4 flex flex-row items-center justify-between gap-3">
+                <div className="text-sm font-semibold">{t('agrienergy.parks.title')}</div>
                 <Button
                     size="sm"
                     variant="secondary"
@@ -128,8 +128,8 @@ export const SolarParksSection: React.FC = () => {
                 >
                     {showCreateForm ? t('agrienergy.parks.cancel') : t('agrienergy.parks.createPark')}
                 </Button>
-            </CardHeader>
-            <CardContent className="space-y-3">
+            </div>
+            <div className="p-4 space-y-3">
                 {showCreateForm && (
                     <div className="rounded border border-gray-200 dark:border-gray-600 p-3 space-y-2">
                         <label className="text-xs font-medium block">{t('agrienergy.parks.parkName')}</label>
@@ -213,7 +213,7 @@ export const SolarParksSection: React.FC = () => {
                         )}
                     </>
                 )}
-            </CardContent>
+            </div>
         </Card>
     );
 };

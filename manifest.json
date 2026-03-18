@@ -11,7 +11,7 @@
   "module_type": "ADDON_FREE",
   "required_plan_type": "basic",
   "pricing_tier": "FREE",
-  "route_path": "//agrienergy",
+  "route_path": "/agrienergy",
   "label": "AgriEnergy Orchestrator",
   "required_roles": ["Farmer", "TenantAdmin", "PlatformAdmin"],
   "navigation": { "enabled": true, "priority": 50, "section": "modules" },

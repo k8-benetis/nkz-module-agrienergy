@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardContent, CardTitle, Button, Alert } from '@nekazari/ui-kit';
+import { Card, Button } from '@nekazari/ui-kit';
 import { useTranslation, useViewerOptional } from '@nekazari/sdk';
 import { AlgorithmSelector } from './AlgorithmSelector';
 import { ConfigureSignals } from './ConfigureSignals';
@@ -100,10 +100,10 @@ export const AgriEnergySandbox: React.FC = () => {
 
             {/* Instant values panel */}
             <Card className="bg-white dark:bg-gray-800 shadow-sm">
-                <CardHeader>
-                    <CardTitle className="text-sm">{t('agrienergy.panel.title')}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
+                <div className="px-4 pt-4">
+                    <div className="text-sm font-semibold">{t('agrienergy.panel.title')}</div>
+                </div>
+                <div className="p-4 space-y-3">
                     {!selectedEntityId && (
                         <p className="text-xs text-gray-500">{t('agrienergy.panel.selectTracker')}</p>
                     )}
@@ -155,7 +155,7 @@ export const AgriEnergySandbox: React.FC = () => {
                             </p>
                         </>
                     )}
-                </CardContent>
+                </div>
             </Card>
 
             {selectedEntityId && (
@@ -174,10 +174,10 @@ export const AgriEnergySandbox: React.FC = () => {
             )}
 
             <Card className="nkz-agrienergy-sandbox bg-white dark:bg-gray-800 shadow-sm">
-                <CardHeader>
-                    <CardTitle>{t('agrienergy.sandbox.title')}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                <div className="px-4 pt-4">
+                    <div className="font-semibold">{t('agrienergy.sandbox.title')}</div>
+                </div>
+                <div className="p-4 space-y-4">
 
                     <div className="flex flex-col space-y-2">
                     <label className="text-sm font-medium">{t('agrienergy.sandbox.targetTiltLabel')}</label>
@@ -200,7 +200,7 @@ export const AgriEnergySandbox: React.FC = () => {
                 </Button>
 
                 {result && (
-                    <Alert className="mt-4 bg-gray-50 dark:bg-gray-900 border border-gray-200">
+                    <div className="mt-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 rounded p-3">
                         <h4 className="font-semibold text-sm mb-2">{t('agrienergy.sandbox.resultsTitle')}</h4>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                             <div>
@@ -212,9 +212,9 @@ export const AgriEnergySandbox: React.FC = () => {
                                 <span className="font-bold text-purple-600">{result.shadow_area_m2?.toFixed(2) || 0} m²</span>
                             </div>
                         </div>
-                    </Alert>
+                    </div>
                 )}
-            </CardContent>
+            </div>
         </Card>
         </div>
     );

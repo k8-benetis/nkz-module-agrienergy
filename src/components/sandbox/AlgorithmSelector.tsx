@@ -3,7 +3,7 @@
  * Saves via PATCH /api/agrienergy/trackers/{id}/algorithm with { activeAlgorithm: { id } }.
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardContent, CardTitle } from '@nekazari/ui-kit';
+import { Card } from '@nekazari/ui-kit';
 import { useTranslation } from '@nekazari/sdk';
 
 function fetchWithAuth(path: string, init?: RequestInit): Promise<Response> {
@@ -78,10 +78,10 @@ export const AlgorithmSelector: React.FC<{
 
     return (
         <Card className="bg-white dark:bg-gray-800 shadow-sm">
-            <CardHeader>
-                <CardTitle className="text-sm">{t('agrienergy.algorithms.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
+            <div className="px-4 pt-4">
+                <div className="text-sm font-semibold">{t('agrienergy.algorithms.title')}</div>
+            </div>
+            <div className="p-4 space-y-2">
                 <p className="text-xs text-gray-500">{t('agrienergy.algorithms.description')}</p>
                 <select
                     className="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1.5 text-sm"
@@ -102,7 +102,7 @@ export const AlgorithmSelector: React.FC<{
                 {saveStatus === 'error' && (
                     <p className="text-xs text-red-600">{t('agrienergy.algorithms.error')}</p>
                 )}
-            </CardContent>
+            </div>
         </Card>
     );
 };

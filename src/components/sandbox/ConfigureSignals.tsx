@@ -3,7 +3,7 @@
  * Fetches signal-sources and current tracker signal_mapping; saves via PATCH.
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardContent, CardTitle, Button } from '@nekazari/ui-kit';
+import { Card, Button } from '@nekazari/ui-kit';
 import { useTranslation } from '@nekazari/sdk';
 
 function fetchWithAuth(path: string, init?: RequestInit): Promise<Response> {
@@ -131,10 +131,10 @@ export const ConfigureSignals: React.FC<ConfigureSignalsProps> = ({
 
     return (
         <Card className="bg-white dark:bg-gray-800 shadow-sm">
-            <CardHeader>
-                <CardTitle className="text-sm">{t('agrienergy.signals.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
+            <div className="px-4 pt-4">
+                <div className="text-sm font-semibold">{t('agrienergy.signals.title')}</div>
+            </div>
+            <div className="p-4 space-y-3">
                 <p className="text-xs text-gray-500">{t('agrienergy.signals.description')}</p>
                 {loadingSources && (
                     <p className="text-xs text-gray-400">{t('common.loading')}</p>
@@ -199,7 +199,7 @@ export const ConfigureSignals: React.FC<ConfigureSignalsProps> = ({
                         )}
                     </>
                 )}
-            </CardContent>
+            </div>
         </Card>
     );
 };
