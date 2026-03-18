@@ -158,7 +158,7 @@ export const SolarParksSection: React.FC = () => {
                             size="sm"
                             onClick={handleCreatePark}
                             disabled={creating || !createName.trim() || !createParcelId.trim()}
-                            className="w-full"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                         >
                             {creating ? t('common.loading') : t('agrienergy.parks.create')}
                         </Button>
