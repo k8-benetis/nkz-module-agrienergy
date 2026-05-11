@@ -1,7 +1,7 @@
 {
   "name": "agrienergy-module",
   "version": "1.0.0",
-  "description": "AgriEnergy Orchestrator — Nekazari Platform Module",
+  "description": "AgriEnergy Orchestrator \u2014 Nekazari Platform Module",
   "license": "AGPL-3.0",
   "type": "module",
   "main": "./src/moduleEntry.ts",
@@ -30,6 +30,7 @@
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.2.2",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "@nekazari/module-kit": "^0.1.0"
   }
 }

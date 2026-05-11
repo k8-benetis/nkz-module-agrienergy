@@ -4,6 +4,7 @@
  *
  * MODULE_ID must match the `id` column in marketplace_modules exactly.
  */
+import { defineModule } from "@nekazari/module-kit";
 import { moduleSlots } from './slots';
 import { i18n } from '@nekazari/sdk';
 import pkg from '../package.json';
